@@ -12,6 +12,9 @@ import net.dv8tion.jda.api.utils.data.DataObject;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 
 import static de.erdbeerbaerlp.dcintegration.common.DiscordIntegration.configFile;
 
@@ -234,9 +237,27 @@ public class Configuration {
             }
 
             public EmbedBuilder toEmbedJson(String jsonString) {
-                final DataObject json = DataObject.fromJson(jsonString);
+                final DataObject json = DataObject.fromJson(jsonColorHexToDec(jsonString));
                 return EmbedBuilder.fromData(json);
             }
+        }
+
+            private String jsonColorHexToDec(String inputString) {
+            
+                Pattern pattern = Pattern.compile("\\\"color\\\": \\\"#[A-Za-z0-9]{6}");
+                Matcher matcher = pattern.matcher(inputString);
+                StringBuilder sb = new StringBuilder();
+                
+                if (matcher.find()) {
+                    String extractedString = matcher.group(0);
+                  	String colorInHex = extractedString.substring(extractedString.indexOf("#") + 1);
+                  	String replacmentStr = extractedString.replace(colorInHex, String.valueOf(Integer.parseInt(colorInHex, 16))).replace("#", "");
+                    matcher.appendReplacement(sb, replacmentStr);
+                    matcher.appendTail(sb);
+                    String outputString = sb.toString();
+                    return outputString;
+                }
+                return inputString;
         }
 
         public static class ChatEmbedEntry extends EmbedEntry {
