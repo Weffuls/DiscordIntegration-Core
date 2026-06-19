@@ -242,11 +242,11 @@ public class Configuration {
             }
         }
 
-            private String jsonColorHexToDec(String inputString) {
+            private static String jsonColorHexToDec(String inputString) {
             
                 Pattern pattern = Pattern.compile("\\\"color\\\": \\\"#[A-Za-z0-9]{6}");
                 Matcher matcher = pattern.matcher(inputString);
-                StringBuilder sb = new StringBuilder();
+                StringBuffer sb = new StringBuffer();
                 
                 if (matcher.find()) {
                     String extractedString = matcher.group(0);
@@ -254,8 +254,7 @@ public class Configuration {
                   	String replacmentStr = extractedString.replace(colorInHex, String.valueOf(Integer.parseInt(colorInHex, 16))).replace("#", "");
                     matcher.appendReplacement(sb, replacmentStr);
                     matcher.appendTail(sb);
-                    String outputString = sb.toString();
-                    return outputString;
+                    return sb.toString();
                 }
                 return inputString;
         }

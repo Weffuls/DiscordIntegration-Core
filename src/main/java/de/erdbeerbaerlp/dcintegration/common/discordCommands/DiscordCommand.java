@@ -87,7 +87,7 @@ public abstract class DiscordCommand extends CommandDataImpl {
      * <p>
      *
      * @param user The user being handled
-     * @return wether or not the user can execute this command
+     * @return whether or not the user can execute this command
      */
     public boolean canUserExecuteCommand(User user) {
         final Member m = DiscordIntegration.INSTANCE.getMemberById(user.getIdLong());

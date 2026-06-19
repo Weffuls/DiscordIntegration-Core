@@ -93,7 +93,7 @@ class DiscordEventListener implements EventListener {
             if (Localization.instance().ingame_discordMessage.isEmpty()) return;
             final MessageReceivedEvent ev = (MessageReceivedEvent) event;
             if (!Configuration.instance().general.allowWebhookMessages && ev.isWebhookMessage()) return;
-            if(ev.isWebhookMessage()){
+            if (ev.isWebhookMessage()) {
                 // Hacky way to lower risk of duplicate webhook messages
                 try {
                     Thread.sleep(Configuration.instance().advanced.webhookMessageDelay);
@@ -187,25 +187,20 @@ class DiscordEventListener implements EventListener {
 
     private void processDiscordCommand(final SlashCommandInteractionEvent ev, final String[] command,
                                        final MessageChannelUnion channel, User sender, final DiscordIntegration dc) {
-        boolean hasPermission = true;
-        boolean executed = false;
+
         ReplyCallbackAction replyCallbackAction = ev.deferReply();
         for (final DiscordCommand cmd : CommandRegistry.getCommandList()) {
             if (cmd.getName().equals(command[0])) {
-                if (cmd.canUserExecuteCommand(sender)) {
-                    if (dc.callEvent((e) -> e.onDiscordCommand(channel, sender, cmd))) return;
+                final boolean canRun = cmd.canUserExecuteCommand(sender);
+                if (canRun) {
                     cmd.execute(ev, replyCallbackAction);
-                    executed = true;
                 } else {
-                    hasPermission = false;
+                    replyCallbackAction.setContent(Localization.instance().commands.noPermission).setEphemeral(true).queue();
                 }
+                return;
             }
 
         }
-        if (!executed)
-            if (dc.callEvent((e) -> e.onDiscordCommand(channel, sender, null))) return;
-        if (!hasPermission) {
-            replyCallbackAction.setContent(Localization.instance().commands.noPermission).setEphemeral(true).queue();
-        }
+
     }
 }

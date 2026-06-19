@@ -83,7 +83,7 @@ public class DiscordIntegration {
     /**
      * Discord Integration data directory
      */
-    public static final File discordDataDir = new File("./DiscordIntegration-Data/");
+    public static File discordDataDir = new File("./DiscordIntegration-Data/");
 
     /**
      * Cache file for players which ignore discord chat
@@ -566,7 +566,7 @@ public class DiscordIntegration {
         @Override
         public void run() {
             while (true) {
-                b.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_EMOJIS_AND_STICKERS, GatewayIntent.MESSAGE_CONTENT);
+                b.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_EXPRESSIONS, GatewayIntent.MESSAGE_CONTENT);
                 b.setAutoReconnect(true);
                 b.setEnableShutdownHook(true);
                 b.setMemberCachePolicy(MemberCachePolicy.ALL);
